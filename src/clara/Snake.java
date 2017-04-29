@@ -10,8 +10,8 @@ import java.util.*;
 
 public class Snake extends TimerTask implements KeyListener {
 
-    int height = 300; int width = 400;   //pixels
-    int squareSize = 50;
+    int height = 900; int width = 1200;   //pixels
+    int squareSize = 100;
 
     int xSquares = width/squareSize;
     int ySquares = height/squareSize;
@@ -54,7 +54,7 @@ public class Snake extends TimerTask implements KeyListener {
 
                 frame.setVisible(true);
                 java.util.Timer timer = new java.util.Timer();   // set up timer - update game every tick
-                timer.scheduleAtFixedRate(Snake.this, 0, 300);   // 300 = update every 300 ms.  Larger number = slower game
+                timer.scheduleAtFixedRate(Snake.this, 0, 150);   // 300 = update every 300 ms.  Larger number = slower game
             }
         });
     }
@@ -67,7 +67,7 @@ public class Snake extends TimerTask implements KeyListener {
             super.paintComponent(g);
 
             g.clearRect(0, 0, width, height);    //Clear panel, fill with black
-            g.setColor(Color.BLACK);
+            g.setColor(Color.RED);
             g.fillRect(0, 0, width, height);
 
             if (gameOver > 6) {                 // If gameOver indicates game is won, display message
@@ -89,7 +89,7 @@ public class Snake extends TimerTask implements KeyListener {
                 g.setColor(Color.BLUE);
                 g.fillRect(kibble[0] * squareSize, kibble[1] * squareSize, squareSize, squareSize);
 
-                g.setColor(Color.RED);
+                g.setColor(Color.YELLOW);
                 for (int[] square : snake) {
                     g.fillRect(square[0] * squareSize, square[1] * squareSize, squareSize, squareSize);
                 }
@@ -135,9 +135,21 @@ public class Snake extends TimerTask implements KeyListener {
             headX = newHead[0];    //Convenience variables for new head x and y
             headY = newHead[1];
 
-            if ((headX < 0 || headX > xSquares) || (headY < 0 || headY > ySquares)) {   //Head outside board? Snake hit wall, game over
+            /*if ((headX < 0 || headX > xSquares) || (headY < 0 || headY > ySquares)) {   //Head outside board? Snake hit wall, game over
                 gameOver = clockTicksToRestart;
                 return;
+            }*/
+            if ((headX<0)){
+                snake.set(0,new int[]{xSquares,headY});
+            }
+            if (headX>xSquares){
+                snake.set(0, new int[]{(headX-xSquares-1),headY});
+            }
+            if (headY<0){
+                snake.set(0,new int[]{headX,ySquares});
+            }
+            if  (headY>ySquares) {
+                snake.set(0, new int[]{headX,(headY-ySquares-1)});
             }
 
             if (headX == kibble[0] && headY == kibble[1]) {      //Is kibble in same square as snake head? Snake ate kibble.
